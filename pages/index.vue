@@ -95,6 +95,13 @@ export default Vue.extend({
 
       await addRow({who: who.value, whom: whom.value, sum: sum.value, comment: comment.value});
 
+      spendingList.value.unshift({
+        who: peopleWho.find(p => p.name === who.value),
+        whom: peopleWhom.find(p => p.name === whom.value),
+        sum: sum.value,
+        comment: comment.value
+      })
+
       who.value = '';
       whom.value = '';
       sum.value = 0;
