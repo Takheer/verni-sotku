@@ -1,12 +1,12 @@
 <template>
   <div>
     <h1>Форма для отправки</h1>
-    <form class='form'>
+    <form class='form' @submit.prevent='addSpending'>
       <input v-model='who' placeholder='Кто купил'>
       <input v-model='whom' placeholder='Кому купил'>
       <input v-model='sum' placeholder='Сумма'>
       <input v-model='comment' placeholder='Комментарий'>
-      <button @click='addSpending'>Добавить</button>
+      <button type='submit'>Добавить</button>
     </form>
   </div>
 </template>
@@ -14,7 +14,7 @@
 <script lang="ts">
 import { ref, useAsync } from '@nuxtjs/composition-api'
 import Vue from 'vue'
-import { allRows } from '~/db/googleheets'
+import { addRow, allRows } from '~/db/googleheets'
 
 export default Vue.extend({
   name: 'Home',
@@ -27,12 +27,17 @@ export default Vue.extend({
     const headings = ref<string[]>([])
     const result = ref<string[][]>([])
 
-    function addSpending() {
+    async function addSpending() {
       if (!(who.value && whom.value && sum.value && comment.value)) {
         return;
       }
 
-      alert([who.value, whom.value, sum.value, comment.value].join(', '))
+      await addRow({who: who.value, whom: whom.value, sum: sum.value, comment: comment.value});
+
+      who.value = '';
+      whom.value = '';
+      sum.value = 0;
+      comment.value = '';
     }
 
     useAsync(async () => {

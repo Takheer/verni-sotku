@@ -3,7 +3,9 @@ import { NuxtConfig } from '@nuxt/types'
 const config: NuxtConfig = {
   env: {
     GOOGLE_API_KEY: process.env.GOOGLE_API_KEY || '',
-    DATA_SHEET_ID: process.env.DATA_SHEET_ID || ''
+    DATA_SHEET_ID: process.env.DATA_SHEET_ID || '',
+    DATA_SHEET_NAME: process.env.DATA_SHEET_NAME || '',
+    BACKEND_URL: process.env.BACKEND_URL || '',
   },
   // Global page headers: https://go.nuxtjs.dev/config-head
   head: {
