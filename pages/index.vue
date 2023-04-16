@@ -75,11 +75,15 @@ export default Vue.extend({
 .main {
   display: flex;
   flex-direction: column;
+  align-items: center;
+  width: 100%;
 
 }
 .header {
   padding: 24px 40px 0;
   font-size: 40px;
+  width: 100%;
+  text-align: center;
 }
 .form {
   padding: 16px 40px;
@@ -87,6 +91,7 @@ export default Vue.extend({
   flex-direction: column;
   gap: 12px;
   max-width: 500px;
+  width: 100%;
 }
 select, input {
   padding: 8px 12px;
