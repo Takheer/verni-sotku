@@ -106,9 +106,19 @@ export default Vue.extend({
 
       headings.value = data.values[0]
       data.values.splice(0, 1)
-      spendingList.value = data.values.reverse().map(row => ({
-        who: peopleWho.find(p => p.name === row[0]),
-        whom: peopleWhom.find(p => p.name === row[1]),
+      spendingList.value = data.values.reverse().map((row, i) => ({
+        who: peopleWho.find(p => p.name === row[0]) || {
+          id: i,
+          name: row[0],
+          bgColor: '#CFD8DC',
+          textColor: '#607D8B',
+        },
+        whom: peopleWhom.find(p => p.name === row[1]) || {
+          id: i,
+          name: row[1],
+          bgColor: '#CFD8DC',
+          textColor: '#607D8B',
+        },
         sum: row[2],
         comment: row[3]
       }))
@@ -174,10 +184,10 @@ option.disabled {
   display: flex;
   flex-direction: row;
   width: 100%;
-  gap: 4px;
+  gap: 16px;
   overflow: auto;
   white-space: nowrap;
-  padding-top: 32px;
+  padding: 32px 24px;
 }
 
 .spending-item {
