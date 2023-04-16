@@ -1,12 +1,18 @@
 <template>
-  <div>
-    <h1>Форма для отправки</h1>
+  <div class='main'>
+    <h1 class='header'>Добавить трату</h1>
     <form class='form' @submit.prevent='addSpending'>
-      <input v-model='who' placeholder='Кто купил'>
-      <input v-model='whom' placeholder='Кому купил'>
+      <select id='people' v-model='who'>
+        <option class='disabled' value='' disabled selected>Кто купил</option>
+        <option v-for='person of people' :key='person' :value='person'>{{ person }}</option>
+      </select>
+      <select id='people' v-model='whom'>
+        <option class='disabled' value='' disabled selected>Кому купил</option>
+        <option v-for='person of people' :key='person' :value='person'>{{ person }}</option>
+      </select>
       <input v-model='sum' placeholder='Сумма'>
       <input v-model='comment' placeholder='Комментарий'>
-      <button type='submit'>Добавить</button>
+      <button class='add-button' type='submit'>Добавить</button>
     </form>
   </div>
 </template>
@@ -23,6 +29,8 @@ export default Vue.extend({
     const whom = ref<string>('');
     const sum = ref<number>(0);
     const comment = ref<string>('');
+
+    const people = ['Антон', 'Лера', 'Рома', 'Эльнур', 'Всем']
 
     const headings = ref<string[]>([])
     const result = ref<string[][]>([])
@@ -57,13 +65,42 @@ export default Vue.extend({
       sum,
       comment,
       addSpending,
+      people,
     }
   }
 })
 </script>
 
 <style>
-.form {
+.main {
+  display: flex;
+  flex-direction: column;
 
+}
+.header {
+  padding: 24px 40px 0;
+  font-size: 40px;
+}
+.form {
+  padding: 16px 40px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  max-width: 500px;
+}
+select, input {
+  padding: 8px 12px;
+  border: 2px solid #3B666B;
+  border-radius: 8px;
+}
+option.disabled {
+  color: #999;
+}
+.add-button {
+  background-color: #3B666B;
+  color: white;
+  border-radius: 16px;
+  padding: 12px 16px;
+  margin-top: 8px;
 }
 </style>
