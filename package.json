@@ -13,9 +13,18 @@
     "lintfix": "prettier --write --list-different . && yarn lint:js --fix"
   },
   "dependencies": {
+    "@google-cloud/local-auth": "2.1.0",
     "@nuxtjs/axios": "^5.13.6",
+    "@nuxtjs/composition-api": "^0.33.1",
+    "child_process": "^1.0.2",
     "core-js": "^3.25.3",
-    "nuxt": "^2.15.8",
+    "fs": "^0.0.1-security",
+    "google-auth-library": "^8.7.0",
+    "googleapis": "105",
+    "http2": "^3.3.7",
+    "net": "^1.0.2",
+    "nuxt": "2",
+    "tls": "^0.0.1",
     "vue": "^2.7.10",
     "vue-server-renderer": "^2.7.10",
     "vue-template-compiler": "^2.7.10"

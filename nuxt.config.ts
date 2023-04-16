@@ -1,4 +1,10 @@
-export default {
+import { NuxtConfig } from '@nuxt/types'
+
+const config: NuxtConfig = {
+  env: {
+    GOOGLE_API_KEY: process.env.GOOGLE_API_KEY || '',
+    DATA_SHEET_ID: process.env.DATA_SHEET_ID || ''
+  },
   // Global page headers: https://go.nuxtjs.dev/config-head
   head: {
     title: 'verni-sotku',
@@ -29,6 +35,7 @@ export default {
     '@nuxt/typescript-build',
     // https://go.nuxtjs.dev/tailwindcss
     '@nuxtjs/tailwindcss',
+    '@nuxtjs/composition-api/module',
   ],
 
   // Modules: https://go.nuxtjs.dev/config-modules
@@ -45,4 +52,11 @@ export default {
 
   // Build Configuration: https://go.nuxtjs.dev/config-build
   build: {},
+
+  browser: {
+    child_process: false,
+    fs: false
+  }
 }
+
+export default config;
