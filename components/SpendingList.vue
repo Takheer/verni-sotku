@@ -1,0 +1,81 @@
+<template>
+  <div class='spending-list'>
+    <div v-for='spending of spendingList' :key='`${spending.who.name}${spending.whom.name}${spending.sum}${spending.comment}`' class='spending-item'>
+      <div class='spending-item-header'>
+        <div class='person-label' :style='{ color: spending.who.textColor, backgroundColor: spending.who.bgColor }'>
+          {{ spending.who.name }}
+        </div>
+        ⇥
+        <div class='person-label' :style='{ color: spending.whom.textColor, backgroundColor: spending.whom.bgColor }'>
+          {{ spending.whom.name }}
+        </div>
+      </div>
+      <div class='spending-item-body'>
+        <div>{{ spending.sum }}</div>
+        —
+        <div>{{ spending.comment }}</div>
+      </div>
+    </div>
+  </div>
+</template>
+
+<script lang='ts'>
+import { defineComponent, PropType } from '@nuxtjs/composition-api'
+
+export default defineComponent({
+  name: 'SpendingList',
+  props: {
+    spendingList: {
+      type: Array as PropType<any[]>,
+      required: true
+    }
+  }
+})
+</script>
+
+<style>
+.spending-list {
+  display: flex;
+  flex-direction: row;
+  width: 100%;
+  gap: 16px;
+  overflow: auto;
+  white-space: nowrap;
+  padding: 16px 24px 32px;
+}
+
+.spending-item {
+  display: flex;
+  flex-direction: column;
+  align-items: baseline;
+  border: 1px solid #3B666B;
+  padding: 8px;
+  border-radius: 8px;
+}
+
+.spending-item-header {
+  display: flex;
+  flex-direction: row;
+}
+
+.spending-item-body {
+  display: flex;
+  flex-direction: row;
+  padding: 8px;
+  gap: 8px;
+}
+
+.person-label {
+  padding: 4px 8px;
+  border-radius: 16px;
+  margin-left: 4px;
+  margin-right: 4px;
+  font-size: 12px;
+  font-weight: 300;
+}
+@media screen and (max-width: 500px) {
+  .spending-list {
+    width: 100%;
+  }
+}
+</style>
