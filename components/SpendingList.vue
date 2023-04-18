@@ -1,5 +1,8 @@
 <template>
   <div class='spending-list'>
+    <div v-if='spendingList.length === 0' class='spending-item spending-item-empty'>
+      Нет данных
+    </div>
     <div v-for='spending of spendingList' :key='`${spending.who.name}${spending.whom.name}${spending.sum}${spending.comment}`' class='spending-item'>
       <div class='spending-item-header'>
         <div class='person-label' :style='{ color: spending.who.textColor, backgroundColor: spending.who.bgColor }'>
@@ -60,6 +63,14 @@ export default defineComponent({
   border: 1px solid #3B666B;
   padding: 8px;
   border-radius: 8px;
+}
+
+.spending-item-empty {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 84px;
+  width: 200px;
 }
 
 .spending-item-header {

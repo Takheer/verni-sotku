@@ -5,9 +5,13 @@
     <h2 class='subheader'>Все траты</h2>
     <SpendingList :spending-list='spendingListFiltered' />
     <h2 class='subheader'>Статистика</h2>
+    <div>
+      <input id='showSummed' v-model='showSum' type='checkbox'>
+      <label for='showSummed'>Показывать сумму долгов</label>
+    </div>
     <SumTable
       :people='peopleWho'
-      :table='statsTable.summed'
+      :table='showSum ? statsTable?.summed : statsTable?.non_summed'
       @filter-by-buyer='filterByBuyer'
       @filter-by-pair='filterByPair'
       @filter-clear='clearFilter'
@@ -49,6 +53,13 @@ type NamesPair = {
   debtorName: string,
 }
 
+type StatsTable = {}
+
+type StatsTablePair = {
+  summed: StatsTable
+  non_summed: StatsTable
+}
+
 export default Vue.extend({
   name: 'Home',
   components: { AddSpendingForm, SpendingList, SumTable },
@@ -68,9 +79,10 @@ export default Vue.extend({
     const headings = ref<string[]>([])
     const spendingList = ref<Spending[]>([])
     const spendingListFiltered = ref<Spending[]>([])
-    const statsTable = ref({})
+    const statsTable = ref<StatsTablePair>({} as StatsTablePair)
+    const showSum = ref<boolean>(true)
 
-    async function addSpending(formData: SpendingFormData) {
+      async function addSpending(formData: SpendingFormData) {
       await addRow({ who: formData.who, whom: formData.whom, sum: formData.sum, comment: formData.comment });
 
       spendingList.value.unshift({
@@ -109,7 +121,7 @@ export default Vue.extend({
       spendingList.value = data.values.reverse().map(row => ({
         who: peopleWho.find(p => p.name === row[0]) || {} as Person,
         whom: peopleWhom.find(p => p.name === row[1]) || {} as Person,
-        sum: parseFloat(row[2]),
+        sum: parseFloat(row[2].replace(",", "")),
         comment: row[3]
       }))
 
@@ -126,6 +138,7 @@ export default Vue.extend({
       peopleWho,
       peopleWhom,
       statsTable,
+      showSum,
     }
   }
 })

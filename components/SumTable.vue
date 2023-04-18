@@ -2,21 +2,21 @@
   <table class='table'>
     <tr>
       <th class='table-header table-header-clickable' @click='clearFilter'>Очистить фильтр</th>
-      <th class='table-header' colspan='4'>Кому купил</th>
+      <th class='table-header' colspan='4'>Кому должен</th>
     </tr>
     <tr>
-      <th class='table-header'>Кто купил</th>
-      <th v-for='debtor of people' :key='debtor.id' class='table-header'>{{ debtor.name }}</th>
+      <th class='table-header'>Кто должен</th>
+      <th v-for='buyer of people' :key='buyer.id' class='table-header'>{{ buyer.name }}</th>
     </tr>
-    <tr v-for='buyer of people' :key='buyer.name'>
-      <td class='table-cell table-cell-content' @click='filterByBuyer(buyer.name)'>{{buyer.name}}</td>
+    <tr v-for='debtor of people' :key='debtor.name'>
+      <td class='table-cell table-cell-content' @click='filterByBuyer(debtor.name)'>{{debtor.name}}</td>
       <td
-        v-for='debtor of people'
-        :key='debtor'
+        v-for='buyer of people'
+        :key='buyer.name'
         class='table-cell'
       >
-        <div v-if='debtor.name !== buyer.name' class='table-cell-content' @click='filterByPair(buyer.name, debtor.name)'>
-          {{ table[buyer.name][debtor.name].sum }}
+        <div v-if='debtor.name !== buyer.name' class='table-cell-content' @click='filterByPair(debtor.name, buyer.name)'>
+          {{ formatCurrency(table[debtor.name][buyer.name].sum) }}
         </div>
         <div v-else class='table-cell-content'>
           —
@@ -43,21 +43,21 @@ export default defineComponent({
     }
   },
   setup(props, { emit }) {
-    const buyersList = computed(() => Object.values(props.table))
+    const debtorsList = computed(() => Object.values(props.table))
     const filtered = ref<boolean>(false)
 
-    const getDebtorList = (buyerName: string) => {
-      const debtor = props.table[buyerName]
-      return Object.keys(debtor || {})
+    const getDebtorList = (debtorName: string) => {
+      const buyer = props.table[debtorName]
+      return Object.keys(buyer || {})
     }
 
-    function filterByBuyer(buyerName: string) {
-      emit('filter-by-buyer', buyerName)
+    function filterByBuyer(debtorName: string) {
+      emit('filter-by-debtor', debtorName)
       filtered.value = true;
     }
 
-    function filterByPair(buyerName: string, debtorName: string) {
-      emit('filter-by-pair', { buyerName, debtorName });
+    function filterByPair(debtorName: string, buyerName: string) {
+      emit('filter-by-pair', { debtorName, buyerName });
       filtered.value = true
     }
 
@@ -66,12 +66,17 @@ export default defineComponent({
       filtered.value = false;
     }
 
+    function formatCurrency(value: number) {
+      return new Intl.NumberFormat('ru-RU', { style: 'currency', currency: 'RUB' }).format(value)
+    }
+
     return {
-      buyersList,
+      debtorsList,
       getDebtorList,
       filterByBuyer,
       filterByPair,
       clearFilter,
+      formatCurrency,
       filtered,
     }
   }
