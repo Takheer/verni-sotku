@@ -52,7 +52,7 @@ export default defineComponent({
     }
 
     function filterByBuyer(debtorName: string) {
-      emit('filter-by-debtor', debtorName)
+      emit('filter-by-buyer', debtorName)
       filtered.value = true;
     }
 
