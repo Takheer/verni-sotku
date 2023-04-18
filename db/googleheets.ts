@@ -42,3 +42,9 @@ export async function addRow(row: SheetRow) {
 
   return await res.json()
 }
+
+export async function getStatistics() {
+  const res = await fetch(`${BACKEND_URL}/statistics`)
+
+  return await res.json()
+}

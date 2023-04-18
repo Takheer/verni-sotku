@@ -11,7 +11,7 @@
         </div>
       </div>
       <div class='spending-item-body'>
-        <div>{{ spending.sum }}</div>
+        <div>{{ formatCurrency(spending.sum) }}</div>
         —
         <div>{{ spending.comment }}</div>
       </div>
@@ -28,6 +28,15 @@ export default defineComponent({
     spendingList: {
       type: Array as PropType<any[]>,
       required: true
+    }
+  },
+  setup() {
+    function formatCurrency(value: number) {
+      return new Intl.NumberFormat('ru-RU', { style: 'currency', currency: 'RUB' }).format(value)
+    }
+
+    return {
+      formatCurrency,
     }
   }
 })

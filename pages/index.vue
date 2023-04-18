@@ -3,69 +3,129 @@
     <h1 class='header'>Добавить трату</h1>
     <AddSpendingForm :people-who='peopleWho' :people-whom='peopleWhom' @add-spending='addSpending' />
     <h2 class='subheader'>Все траты</h2>
-    <SpendingList :spending-list='spendingList' />
-<!--    <h2 class='subheader'>Статистика</h2>-->
-<!--    <SumTable :people='peopleWho' :table='[]' />-->
+    <SpendingList :spending-list='spendingListFiltered' />
+    <h2 class='subheader'>Статистика</h2>
+    <SumTable
+      :people='peopleWho'
+      :table='statsTable.summed'
+      @filter-by-buyer='filterByBuyer'
+      @filter-by-pair='filterByPair'
+      @filter-clear='clearFilter'
+    />
   </div>
 </template>
 
 <script lang="ts">
 import { ref, useFetch } from '@nuxtjs/composition-api'
 import Vue from 'vue'
-import { addRow, allRows } from '~/db/googleheets'
+import { addRow, allRows, getStatistics } from '~/db/googleheets'
 import SumTable from '~/components/SumTable.vue'
 import SpendingList from '~/components/SpendingList.vue'
 import AddSpendingForm from '~/components/AddSpendingForm.vue'
+
+export type Person = {
+  id: number,
+  name: string,
+  bgColor: string,
+  textColor: string
+}
+
+export type Spending = {
+  who: Person,
+  whom: Person,
+  sum: number,
+  comment: string,
+}
+
+export type SpendingFormData = {
+  who: string,
+  whom: string,
+  sum: number,
+  comment: string,
+}
+
+type NamesPair = {
+  buyerName: string,
+  debtorName: string,
+}
 
 export default Vue.extend({
   name: 'Home',
   components: { AddSpendingForm, SpendingList, SumTable },
   setup() {
-    const peopleWho = [
+    const peopleWho: Person[] = [
       { id: 1, name: 'Антон', bgColor: '#FFCDD2', textColor: '#F44336' },
       { id: 2, name: 'Лера', bgColor: '#F8BBD0', textColor: '#E91E63' },
       { id: 3, name: 'Рома', bgColor: '#E1BEE7', textColor: '#9C27B0' },
       { id: 4, name: 'Эльнур', bgColor: '#D1C4E9', textColor: '#673AB7' },
     ]
 
-    const peopleWhom = [
+    const peopleWhom: Person[] = [
       ...peopleWho,
       { id: 5, name: 'Всем', bgColor: '#CFD8DC', textColor: '#607D8B' }
     ]
 
     const headings = ref<string[]>([])
-    const spendingList = ref<any[]>([])
+    const spendingList = ref<Spending[]>([])
+    const spendingListFiltered = ref<Spending[]>([])
+    const statsTable = ref({})
 
-    async function addSpending(formData: any) {
-      console.log({formData})
-      await addRow({who: formData.who, whom: formData.whom, sum: formData.sum, comment: formData.comment});
+    async function addSpending(formData: SpendingFormData) {
+      await addRow({ who: formData.who, whom: formData.whom, sum: formData.sum, comment: formData.comment });
 
       spendingList.value.unshift({
-        who: peopleWho.find(p => p.name === formData.who),
-        whom: peopleWhom.find(p => p.name === formData.whom),
+        who: peopleWho.find(p => p.name === formData.who) || {} as Person,
+        whom: peopleWhom.find(p => p.name === formData.whom) || {} as Person,
         sum: formData.sum,
         comment: formData.comment
       })
     }
 
+    function filterByBuyer(name: string) {
+      spendingListFiltered.value = spendingList.value.filter((spending: Spending) => spending.who.name === name)
+    }
+
+    function filterByPair({ buyerName, debtorName }: NamesPair) {
+      spendingListFiltered.value = spendingList.value.filter(
+        (spending: Spending) => spending.who.name === buyerName && spending.whom.name === debtorName ||
+          spending.who.name === debtorName && spending.whom.name === buyerName
+      )
+    }
+
+    function clearFilter() {
+      spendingListFiltered.value = spendingList.value;
+    }
+
     useFetch(async () => {
-      const data = await allRows();
+      const [data, statistics] = await Promise.all([
+        allRows(),
+        getStatistics(),
+      ]);
+
+      statsTable.value = statistics;
 
       headings.value = data.values[0]
       data.values.splice(0, 1)
       spendingList.value = data.values.reverse().map(row => ({
-        who: peopleWho.find(p => p.name === row[0]),
-        whom: peopleWhom.find(p => p.name === row[1]),
-        sum: row[2],
+        who: peopleWho.find(p => p.name === row[0]) || {} as Person,
+        whom: peopleWhom.find(p => p.name === row[1]) || {} as Person,
+        sum: parseFloat(row[2]),
         comment: row[3]
       }))
+
+      spendingListFiltered.value = spendingList.value;
     })
 
     return {
       addSpending,
+      filterByBuyer,
+      filterByPair,
+      clearFilter,
       spendingList,
+      spendingListFiltered,
       peopleWho,
       peopleWhom,
+      statsTable,
     }
   }
 })
@@ -86,30 +146,10 @@ export default Vue.extend({
   text-align: center;
   margin-bottom: 8px;
 }
-
-.form {
-  position: sticky;
-  top: 20px;
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-  padding: 0 32px;
-  width: 50%;
-}
 select, input {
   padding: 8px 12px;
   border: 2px solid #3B666B;
   border-radius: 8px;
-}
-option.disabled {
-  color: #999;
-}
-.add-button {
-  background-color: #3B666B;
-  color: white;
-  border-radius: 16px;
-  padding: 12px 16px;
-  margin-top: 8px;
 }
 
 .subheader {
@@ -118,11 +158,5 @@ option.disabled {
   padding-left: 32px;
   width: 100%;
   text-align: center;
-}
-
-@media screen and (max-width: 500px) {
-  .form {
-    width: 100%;
-  }
 }
 </style>

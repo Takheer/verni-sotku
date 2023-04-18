@@ -59,5 +59,32 @@ export default defineComponent({
 })
 </script>
 
-<style lang='scss'>
+<style>
+.form {
+  position: sticky;
+  top: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding: 0 32px;
+  width: 50%;
+}
+
+option.disabled {
+  color: #999;
+}
+
+.add-button {
+  background-color: #3B666B;
+  color: white;
+  border-radius: 16px;
+  padding: 12px 16px;
+  margin-top: 8px;
+}
+
+@media screen and (max-width: 500px) {
+  .form {
+    width: 100%;
+  }
+}
 </style>
