@@ -8,7 +8,7 @@
       <option class='disabled' value='' disabled selected>Кому купил</option>
       <option v-for='person of peopleWhom' :key='person.id' :value='person.name'>{{ person.name }}</option>
     </select>
-    <CalculatorInput placeholder='Сумма' :value='sum' @calculate='setCalcValue' @calculate-error='setCalcError'/>
+    <CalculatorInput placeholder='Сумма' :value='calculatedSum' @calculate='setCalcValue' @calculate-error='setCalcError'/>
     <div class='calculated-value'>{{ calculatedSum }}</div>
     <div class='calculated-value-error'>{{ calcError }}</div>
     <input v-model='comment' placeholder='Комментарий'>
@@ -36,7 +36,6 @@ export default defineComponent({
   setup(_, { emit }) {
     const who = ref<string>('');
     const whom = ref<string>('');
-    const sum = ref<number>(0);
     const comment = ref<string>('');
 
     const calculatedSum = ref<number | null>(0)
@@ -52,7 +51,6 @@ export default defineComponent({
       who.value = '';
       whom.value = '';
       calculatedSum.value = 0;
-      sum.value = 0;
       comment.value = '';
     }
 

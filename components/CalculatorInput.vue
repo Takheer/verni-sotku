@@ -9,7 +9,7 @@
 </template>
 
 <script lang='ts'>
-import { defineComponent, ref } from '@nuxtjs/composition-api'
+import { defineComponent, ref, watch } from '@nuxtjs/composition-api'
 
 export default defineComponent({
   name: 'CalculatorInput',
@@ -17,10 +17,14 @@ export default defineComponent({
     placeholder: {
       type: String,
       default: '',
+    },
+    value: {
+      type: Number,
+      required: true,
     }
   },
-  setup(_, { emit }) {
-    const rawValue = ref<string>('');
+  setup(props, { emit }) {
+    const rawValue = ref<string>(props.value.toString());
 
     function calculateValue(value: string) {
       rawValue.value = value
@@ -37,6 +41,10 @@ export default defineComponent({
         emit('calculate-error', "¯\\_(ツ)_/¯")
       }
     }
+
+    watch(() => props.value, (newVal) => {
+      rawValue.value = newVal.toString();
+    })
 
     return {
       calculateValue,
