@@ -8,7 +8,7 @@
       <option class='disabled' value='' disabled selected>Кому купил</option>
       <option v-for='person of peopleWhom' :key='person.id' :value='person.name'>{{ person.name }}</option>
     </select>
-    <CalculatorInput placeholder='Сумма' :value='calculatedSum' @calculate='setCalcValue' @calculate-error='setCalcError'/>
+    <CalculatorInput placeholder='Сумма' :value='rawSum' @calculate='setCalcValue' @calculate-error='setCalcError'/>
     <div class='calculated-value'>{{ calculatedSum }}</div>
     <div class='calculated-value-error'>{{ calcError }}</div>
     <input v-model='comment' placeholder='Комментарий'>
@@ -19,6 +19,11 @@
 <script lang='ts'>
 import { defineComponent, ref } from '@nuxtjs/composition-api'
 import CalculatorInput from '~/components/CalculatorInput.vue'
+
+type ValuesPair = {
+  value: number
+  rawValue: string
+}
 
 export default defineComponent({
   name: 'AddSpendingForm',
@@ -36,6 +41,7 @@ export default defineComponent({
   setup(_, { emit }) {
     const who = ref<string>('');
     const whom = ref<string>('');
+    const rawSum = ref<string>('');
     const comment = ref<string>('');
 
     const calculatedSum = ref<number | null>(0)
@@ -45,17 +51,20 @@ export default defineComponent({
       if (!(who.value && whom.value && calculatedSum.value && comment.value)) {
         return;
       }
+      rawSum.value = calculatedSum.value.toString();
 
       emit('add-spending', { who: who.value, whom: whom.value, sum: calculatedSum.value, comment: comment.value })
 
       who.value = '';
       whom.value = '';
+      rawSum.value = '';
       calculatedSum.value = 0;
       comment.value = '';
     }
 
-    function setCalcValue(value: number) {
-      calculatedSum.value = value || 0
+    function setCalcValue(valuesPair: ValuesPair) {
+      calculatedSum.value = valuesPair.value || 0
+      rawSum.value = valuesPair.rawValue
       calcError.value = ''
     }
 
@@ -67,6 +76,7 @@ export default defineComponent({
     return {
       who,
       whom,
+      rawSum,
       comment,
       addSpending,
       setCalcValue,

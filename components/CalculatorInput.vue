@@ -19,7 +19,7 @@ export default defineComponent({
       default: '',
     },
     value: {
-      type: Number,
+      type: [Number, String],
       required: true,
     }
   },
@@ -36,7 +36,7 @@ export default defineComponent({
       try {
         // eslint-disable-next-line no-eval
         const calcValue = eval(value)
-        emit('calculate', calcValue)
+        emit('calculate', { value: calcValue, rawValue })
       } catch {
         emit('calculate-error', "¯\\_(ツ)_/¯")
       }
