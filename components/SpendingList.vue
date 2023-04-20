@@ -52,8 +52,14 @@ export default defineComponent({
   width: 100%;
   gap: 16px;
   overflow: auto;
+  -ms-overflow-style: none;  /* IE and Edge */
+  scrollbar-width: none;  /* Firefox */
   white-space: nowrap;
   padding: 16px 24px 32px;
+}
+
+.spending-list::-webkit-scrollbar {
+  display: none;
 }
 
 .spending-item {
