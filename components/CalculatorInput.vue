@@ -28,7 +28,7 @@ export default defineComponent({
 
     function calculateValue(value: string) {
       rawValue.value = value
-      const valid = value.split('').every((c: string) => '0123456789+-*/()'.includes(c))
+      const valid = value.split('').every((c: string) => '0123456789+-*/().'.includes(c))
       if (!valid) {
         emit('calculate-error', 'Используй *, /, +, - и (скобки) для операций')
         return;
