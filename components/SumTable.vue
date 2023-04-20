@@ -9,13 +9,24 @@
       <th v-for='buyer of people' :key='buyer.id' class='table-header'>{{ buyer.name }}</th>
     </tr>
     <tr v-for='debtor of people' :key='debtor.name'>
-      <td class='table-cell table-cell-content' @click='filterByDebtor(debtor.name)'>{{debtor.name}}</td>
+      <td
+        class='table-cell table-cell-content'
+        :class="{'table-cell--selected': selected === debtor.name}"
+        @click='filterByDebtor(debtor.name)'
+      >
+        {{debtor.name}}
+      </td>
       <td
         v-for='buyer of people'
         :key='buyer.name'
         class='table-cell'
       >
-        <div v-if='debtor.name !== buyer.name' class='table-cell-content' @click='filterByPair(debtor.name, buyer.name)'>
+        <div
+          v-if='debtor.name !== buyer.name'
+          class='table-cell-content'
+          :class="{'table-cell--selected': selected === `${debtor.name}${buyer.name}`}"
+          @click='filterByPair(debtor.name, buyer.name)'
+        >
           {{ formatCurrency(table[debtor.name][buyer.name].sum) }}
         </div>
         <div v-else class='table-cell-content'>
@@ -44,6 +55,7 @@ export default defineComponent({
   },
   setup(props, { emit }) {
     const debtorsList = computed(() => Object.values(props.table))
+    const selected = ref<string>('')
     const filtered = ref<boolean>(false)
 
     const getDebtorList = (debtorName: string) => {
@@ -53,16 +65,19 @@ export default defineComponent({
 
     function filterByDebtor(debtorName: string) {
       emit('filter-by-debtor', debtorName)
+      selected.value = debtorName
       filtered.value = true;
     }
 
     function filterByPair(debtorName: string, buyerName: string) {
       emit('filter-by-pair', { debtorName, buyerName });
+      selected.value = `${debtorName}${buyerName}`
       filtered.value = true
     }
 
     function clearFilter() {
       emit('filter-clear');
+      selected.value = '';
       filtered.value = false;
     }
 
@@ -78,6 +93,7 @@ export default defineComponent({
       clearFilter,
       formatCurrency,
       filtered,
+      selected,
     }
   }
 })
@@ -107,7 +123,7 @@ export default defineComponent({
   transition: all 0.2s;
   padding: 4px 12px;
 }
-.table-cell-content:hover {
+.table-cell-content:hover, .table-cell--selected {
   background-color: #ffff0044;
 }
 </style>
