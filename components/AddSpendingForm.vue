@@ -119,6 +119,12 @@ option.disabled {
   color: #ff0000cc;
 }
 
+@media screen and (max-width: 768px) {
+  .form {
+    width: 80%;
+  }
+}
+
 @media screen and (max-width: 500px) {
   .form {
     width: 100%;
