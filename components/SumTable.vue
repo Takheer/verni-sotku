@@ -9,7 +9,7 @@
       <th v-for='buyer of people' :key='buyer.id' class='table-header'>{{ buyer.name }}</th>
     </tr>
     <tr v-for='debtor of people' :key='debtor.name'>
-      <td class='table-cell table-cell-content' @click='filterByBuyer(debtor.name)'>{{debtor.name}}</td>
+      <td class='table-cell table-cell-content' @click='filterByDebtor(debtor.name)'>{{debtor.name}}</td>
       <td
         v-for='buyer of people'
         :key='buyer.name'
@@ -51,8 +51,8 @@ export default defineComponent({
       return Object.keys(buyer || {})
     }
 
-    function filterByBuyer(debtorName: string) {
-      emit('filter-by-buyer', debtorName)
+    function filterByDebtor(debtorName: string) {
+      emit('filter-by-debtor', debtorName)
       filtered.value = true;
     }
 
@@ -73,7 +73,7 @@ export default defineComponent({
     return {
       debtorsList,
       getDebtorList,
-      filterByBuyer,
+      filterByDebtor,
       filterByPair,
       clearFilter,
       formatCurrency,

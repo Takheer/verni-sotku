@@ -12,7 +12,7 @@
     <SumTable
       :people='peopleWho'
       :table='showSum ? statsTable?.summed : statsTable?.non_summed'
-      @filter-by-buyer='filterByBuyer'
+      @filter-by-debtor='filterByDebtor'
       @filter-by-pair='filterByPair'
       @filter-clear='clearFilter'
     />
@@ -82,8 +82,9 @@ export default Vue.extend({
     const statsTable = ref<StatsTablePair>({} as StatsTablePair)
     const showSum = ref<boolean>(true)
 
-      async function addSpending(formData: SpendingFormData) {
+    async function addSpending(formData: SpendingFormData) {
       await addRow({ who: formData.who, whom: formData.whom, sum: formData.sum, comment: formData.comment });
+      clearFilter();
 
       spendingList.value.unshift({
         who: peopleWho.find(p => p.name === formData.who) || {} as Person,
@@ -91,10 +92,12 @@ export default Vue.extend({
         sum: formData.sum,
         comment: formData.comment
       })
+
+      statsTable.value = await getStatistics();
     }
 
-    function filterByBuyer(name: string) {
-      spendingListFiltered.value = spendingList.value.filter((spending: Spending) => spending.who.name === name)
+    function filterByDebtor(name: string) {
+      spendingListFiltered.value = spendingList.value.filter((spending: Spending) => spending.whom.name === name)
     }
 
     function filterByPair({ buyerName, debtorName }: NamesPair) {
@@ -130,7 +133,7 @@ export default Vue.extend({
 
     return {
       addSpending,
-      filterByBuyer,
+      filterByDebtor,
       filterByPair,
       clearFilter,
       spendingList,
