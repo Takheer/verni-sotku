@@ -8,7 +8,9 @@
       <option class='disabled' value='' disabled selected>Кому купил</option>
       <option v-for='person of peopleWhom' :key='person.id' :value='person.name'>{{ person.name }}</option>
     </select>
-    <input v-model='sum' placeholder='Сумма'>
+    <CalculatorInput placeholder='Сумма' :value='sum' @calculate='setCalcValue' @calculate-error='setCalcError'/>
+    <div class='calculated-value'>{{ calculatedSum }}</div>
+    <div class='calculated-value-error'>{{ calcError }}</div>
     <input v-model='comment' placeholder='Комментарий'>
     <button class='add-button' type='submit'>Добавить</button>
   </form>
@@ -16,9 +18,11 @@
 
 <script lang='ts'>
 import { defineComponent, ref } from '@nuxtjs/composition-api'
+import CalculatorInput from '~/components/CalculatorInput.vue'
 
 export default defineComponent({
   name: 'AddSpendingForm',
+  components: { CalculatorInput },
   props: {
     peopleWho: {
       type: Array,
@@ -35,25 +39,42 @@ export default defineComponent({
     const sum = ref<number>(0);
     const comment = ref<string>('');
 
+    const calculatedSum = ref<number | null>(0)
+    const calcError = ref<string>('')
+
     function addSpending() {
-      if (!(who.value && whom.value && sum.value && comment.value)) {
+      if (!(who.value && whom.value && calculatedSum.value && comment.value)) {
         return;
       }
 
-      emit('add-spending', { who: who.value, whom: whom.value, sum: sum.value, comment: comment.value })
+      emit('add-spending', { who: who.value, whom: whom.value, sum: calculatedSum.value, comment: comment.value })
 
       who.value = '';
       whom.value = '';
+      calculatedSum.value = 0;
       sum.value = 0;
       comment.value = '';
+    }
+
+    function setCalcValue(value: number) {
+      calculatedSum.value = value || 0
+      calcError.value = ''
+    }
+
+    function setCalcError(value: string) {
+      calcError.value = value
+      calculatedSum.value = null
     }
 
     return {
       who,
       whom,
-      sum,
       comment,
       addSpending,
+      setCalcValue,
+      setCalcError,
+      calculatedSum,
+      calcError,
     }
   }
 })
@@ -80,6 +101,14 @@ option.disabled {
   border-radius: 16px;
   padding: 12px 16px;
   margin-top: 8px;
+}
+
+.calculated-value {
+  color: #888888;
+}
+
+.calculated-value-error {
+  color: #ff0000cc;
 }
 
 @media screen and (max-width: 500px) {
