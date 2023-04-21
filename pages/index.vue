@@ -220,6 +220,23 @@ export default Vue.extend({
     font-weight: 200;
   }
 }
+@media screen and (max-width: 500px) {
+  .header {
+    &-left {
+      gap: 16px
+    }
+    &-img {
+      height: 40px;
+      width: 40px;
+    }
+    &-title {
+      font-size: 24px;
+    }
+    &-link {
+      font-size: 16px;
+    }
+  }
+}
 .title {
   padding: 24px 40px 0;
   font-size: 40px;
