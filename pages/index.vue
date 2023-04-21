@@ -1,17 +1,29 @@
 <template>
   <div class='main'>
-    <h1 class='header'>Добавить трату</h1>
+    <header class='header'>
+      <div class='header-left'>
+        <img src='~/assets/favicon.png' alt='verni sotku icon' class='header-img'>
+        <p class='header-title'>Верни сотку</p>
+      </div>
+      <div class='header-right'>
+        <NuxtLink class='header-link' to='/about'>
+          О нас
+        </NuxtLink>
+      </div>
+    </header>
+    <h1 class='title'>Добавить трату</h1>
     <AddSpendingForm :people-who='peopleWho' :people-whom='peopleWhom' @add-spending='addSpending' />
     <h2 class='subheader'>Все траты</h2>
-    <SpendingList :spending-list='spendingListFiltered' />
+    <SpendingList v-if='spendingListFiltered.length' :spending-list='spendingListFiltered' />
     <h2 class='subheader'>Статистика</h2>
     <div>
       <input id='showSummed' v-model='showSum' type='checkbox'>
       <label for='showSummed'>Показывать сумму долгов</label>
     </div>
     <SumTable
+      v-if='Object.values(statsTable?.summed || {}).length'
       :people='peopleWho'
-      :table='showSum ? statsTable?.summed : statsTable?.non_summed'
+      :table='showSum ? statsTable.summed : statsTable.non_summed'
       @filter-by-debtor='filterByDebtor'
       @filter-by-pair='filterByPair'
       @filter-clear='clearFilter'
@@ -147,7 +159,7 @@ export default Vue.extend({
 })
 </script>
 
-<style>
+<style lang='scss'>
 .main {
   display: flex;
   flex-direction: column;
@@ -156,6 +168,59 @@ export default Vue.extend({
   overflow: hidden;
 }
 .header {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  border-bottom: 1px solid #555555;
+  padding: 16px;
+
+  &-left {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 32px;
+  }
+
+  &-right {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 8px;
+    padding-right: 32px;
+  }
+
+  &-link {
+    font-size: 24px;
+    font-weight: 200;
+    transition: all 0.2s;
+
+    &::after {
+      content: '';
+      width: 0;
+      height: 2px;
+      display: block;
+      background: #3B666B;
+      transition: 300ms;
+    }
+
+    &:hover::after {
+      width: 100%;
+    }
+  }
+
+  &-img {
+    height: 64px;
+    width: 64px;
+  }
+
+  &-title {
+    font-size: 40px;
+    font-weight: 200;
+  }
+}
+.title {
   padding: 24px 40px 0;
   font-size: 40px;
   width: 100%;

@@ -1,13 +1,16 @@
 <template>
   <table class='table'>
-    <tr>
-      <th class='table-header table-header-clickable' @click='clearFilter'>Очистить фильтр</th>
-      <th class='table-header' colspan='4'>Кому должен</th>
-    </tr>
-    <tr>
-      <th class='table-header'>Кто должен</th>
-      <th v-for='buyer of people' :key='buyer.id' class='table-header'>{{ buyer.name }}</th>
-    </tr>
+    <thead>
+      <tr>
+        <th class='table-header table-header-clickable' @click='clearFilter'>Очистить фильтр</th>
+        <th class='table-header' colspan='4'>Кому должен</th>
+      </tr>
+      <tr>
+        <th class='table-header'>Кто должен</th>
+        <th v-for='buyer of people' :key='buyer.id' class='table-header'>{{ buyer.name }}</th>
+      </tr>
+    </thead>
+    <tbody>
     <tr v-for='debtor of people' :key='debtor.name'>
       <td
         class='table-cell table-cell-content'
@@ -34,6 +37,7 @@
         </div>
       </td>
     </tr>
+    </tbody>
   </table>
 </template>
 

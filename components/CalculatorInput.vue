@@ -30,7 +30,7 @@ export default defineComponent({
       rawValue.value = value
       const valid = value.split('').every((c: string) => '0123456789+-*/().'.includes(c))
       if (!valid) {
-        emit('calculate-error', 'Используй *, /, +, - и (скобки) для операций')
+        emit('calculate-error', 'Используй *, /, +, - и (скобки) для операций, а точку — как десятичный разделитель')
         return;
       }
       try {
