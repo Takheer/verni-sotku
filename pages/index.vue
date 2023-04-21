@@ -1,16 +1,6 @@
 <template>
   <div class='main'>
-    <header class='header'>
-      <div class='header-left'>
-        <img src='~/assets/favicon.png' alt='verni sotku icon' class='header-img'>
-        <p class='header-title'>Верни сотку</p>
-      </div>
-      <div class='header-right'>
-        <NuxtLink class='header-link' to='/about'>
-          О нас
-        </NuxtLink>
-      </div>
-    </header>
+    <Header />
     <h1 class='title'>Добавить трату</h1>
     <AddSpendingForm :people-who='peopleWho' :people-whom='peopleWhom' @add-spending='addSpending' />
     <h2 class='subheader'>Все траты</h2>
@@ -38,6 +28,7 @@ import { addRow, allRows, getStatistics } from '~/db/googleheets'
 import SumTable from '~/components/SumTable.vue'
 import SpendingList from '~/components/SpendingList.vue'
 import AddSpendingForm from '~/components/AddSpendingForm.vue'
+import Header from '~/components/Header.vue'
 
 export type Person = {
   id: number,
@@ -74,7 +65,7 @@ type StatsTablePair = {
 
 export default Vue.extend({
   name: 'Home',
-  components: { AddSpendingForm, SpendingList, SumTable },
+  components: { Header, AddSpendingForm, SpendingList, SumTable },
   setup() {
     const peopleWho: Person[] = [
       { id: 1, name: 'Антон', bgColor: '#FFCDD2', textColor: '#F44336' },
@@ -167,76 +158,7 @@ export default Vue.extend({
   width: 100%;
   overflow: hidden;
 }
-.header {
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  justify-content: space-between;
-  width: 100%;
-  border-bottom: 1px solid #555555;
-  padding: 16px;
 
-  &-left {
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    gap: 32px;
-  }
-
-  &-right {
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    gap: 8px;
-    padding-right: 32px;
-  }
-
-  &-link {
-    font-size: 24px;
-    font-weight: 200;
-    transition: all 0.2s;
-
-    &::after {
-      content: '';
-      width: 0;
-      height: 2px;
-      display: block;
-      background: #3B666B;
-      transition: 300ms;
-    }
-
-    &:hover::after {
-      width: 100%;
-    }
-  }
-
-  &-img {
-    height: 64px;
-    width: 64px;
-  }
-
-  &-title {
-    font-size: 40px;
-    font-weight: 200;
-  }
-}
-@media screen and (max-width: 500px) {
-  .header {
-    &-left {
-      gap: 16px
-    }
-    &-img {
-      height: 40px;
-      width: 40px;
-    }
-    &-title {
-      font-size: 24px;
-    }
-    &-link {
-      font-size: 16px;
-    }
-  }
-}
 .title {
   padding: 24px 40px 0;
   font-size: 40px;
