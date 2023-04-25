@@ -92,3 +92,4 @@ sw.*
 
 /db/credentials.js
 /db/credentials.json
+/db/firebaseConfig.js

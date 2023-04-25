@@ -1,6 +1,6 @@
 <template>
   <div>
-    <Header />
+    <HeaderBar />
     <div class='about'>
       <h1 class='title'>Верни Сотку — Приложение для контроля общих долгов</h1>
       <div class='img-text'>
@@ -16,11 +16,11 @@
 
 <script lang='ts'>
 import { defineComponent } from '@nuxtjs/composition-api'
-import Header from '~/components/Header.vue'
+import HeaderBar from '~/components/HeaderBar.vue'
 
 export default defineComponent({
   name: 'About',
-  components: { Header },
+  components: { HeaderBar },
 })
 </script>
 

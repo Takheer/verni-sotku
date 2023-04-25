@@ -8,15 +8,32 @@
       <NuxtLink class='header-link' to='/about'>
         О нас
       </NuxtLink>
+      <NuxtLink v-if='uid' class='header-link'  :to='`user/${uid}`'>
+        😎
+      </NuxtLink>
+      <NuxtLink v-else class='header-link' to='/user/sign-in'>
+        Ауф 🐺
+      </NuxtLink>
     </div>
   </header>
 </template>
 
 <script lang='ts'>
-import { defineComponent } from '@nuxtjs/composition-api'
+import { defineComponent, ref, useContext } from '@nuxtjs/composition-api'
 
 export default defineComponent({
-  name: 'Header'
+  name: 'HeaderBar',
+  setup() {
+    const { store } = useContext();
+    const uid = ref<string>();
+    if (process.client) {
+      uid.value = store.getters?.['user/getUserId'] || localStorage?.getItem('uid')
+    }
+
+    return {
+      uid
+    }
+  }
 })
 </script>
 
@@ -41,7 +58,7 @@ export default defineComponent({
     display: flex;
     flex-direction: row;
     align-items: center;
-    gap: 8px;
+    gap: 32px;
     padding-right: 32px;
   }
 
@@ -79,12 +96,15 @@ export default defineComponent({
     &-left {
       gap: 16px
     }
+    &-right {
+      gap: 8px;
+    }
     &-img {
-      height: 40px;
-      width: 40px;
+      height: 32px;
+      width: 32px;
     }
     &-title {
-      font-size: 24px;
+      font-size: 16px;
     }
     &-link {
       font-size: 16px;

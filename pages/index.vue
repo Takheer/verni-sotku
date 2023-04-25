@@ -1,6 +1,6 @@
 <template>
   <div class='main'>
-    <Header />
+    <HeaderBar />
     <h1 class='title'>Добавить трату</h1>
     <AddSpendingForm :people-who='peopleWho' :people-whom='peopleWhom' @add-spending='addSpending' />
     <h2 class='subheader'>Все траты</h2>
@@ -28,7 +28,7 @@ import { addRow, allRows, getStatistics } from '~/db/googleheets'
 import SumTable from '~/components/SumTable.vue'
 import SpendingList from '~/components/SpendingList.vue'
 import AddSpendingForm from '~/components/AddSpendingForm.vue'
-import Header from '~/components/Header.vue'
+import HeaderBar from '~/components/HeaderBar.vue'
 
 export type Person = {
   id: number,
@@ -65,7 +65,7 @@ type StatsTablePair = {
 
 export default Vue.extend({
   name: 'Home',
-  components: { Header, AddSpendingForm, SpendingList, SumTable },
+  components: { HeaderBar, AddSpendingForm, SpendingList, SumTable },
   setup() {
     const peopleWho: Person[] = [
       { id: 1, name: 'Антон', bgColor: '#FFCDD2', textColor: '#F44336' },
