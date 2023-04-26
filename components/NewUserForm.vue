@@ -13,13 +13,13 @@
 </template>
 
 <script lang='ts'>
-import { defineComponent, ref, useRouter } from '@nuxtjs/composition-api'
-import { createUser } from '~/db/firebaseAuth'
+import { defineComponent, ref, useContext, useRouter } from '@nuxtjs/composition-api'
 
 export default defineComponent({
   name: 'NewUserForm',
   setup() {
     const router = useRouter();
+    const { store } = useContext();
     const email = ref<string>('');
     const password = ref<string>('');
     const passwordAgain = ref<string>('');
@@ -43,7 +43,7 @@ export default defineComponent({
         return;
       }
 
-      const res = await createUser(email.value, password.value);
+      const res = await store.dispatch('user/createUser', { email: email.value, password: password.value });
       if (res.user) {
         router.push("/")
         errorMessage.value = ''

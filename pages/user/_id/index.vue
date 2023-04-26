@@ -6,18 +6,18 @@
 </template>
 
 <script lang='ts'>
-import { defineComponent, useRoute, useRouter } from '@nuxtjs/composition-api'
-import { signOut } from '~/db/firebaseAuth'
+import { defineComponent, useContext, useRoute, useRouter } from '@nuxtjs/composition-api'
 
 export default defineComponent({
   name: 'UserPersonalPage',
   setup() {
     const route = useRoute();
     const router = useRouter();
+    const { store } = useContext();
     const id = route.value.params.id
 
     async function signOutUser() {
-      await signOut();
+      await store.dispatch('user/signOut');
       router.push('/')
     }
 

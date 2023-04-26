@@ -13,7 +13,6 @@
 
 <script lang='ts'>
 import { defineComponent, ref, useContext, useRouter } from '@nuxtjs/composition-api'
-import { createUser, signIn } from '~/db/firebaseAuth'
 
 export default defineComponent({
   name: 'SignInForm',
@@ -38,9 +37,8 @@ export default defineComponent({
         return;
       }
 
-      const res = await signIn(email.value, password.value);
+      const res = await store.dispatch('user/signInUser', { email: email.value, password: password.value });
       if (res.user) {
-        store.commit('user/setUserId', res.user.uid)
         router.push("/")
         errorMessage.value = ''
       } else {

@@ -2,6 +2,8 @@ import { initializeApp } from "firebase/app";
 import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, onAuthStateChanged } from "firebase/auth";
 import config from '~/db/firebaseConfig'
 
+const BACKEND_URL = process.env.BACKEND_URL
+
 const firebaseConfig = config;
 
 const app = initializeApp(firebaseConfig);
@@ -20,14 +22,35 @@ onAuthStateChanged(authentication, (user) => {
   }
 });
 
-export async function createUser(email: string, password: string) {
+async function createUserInDB(email: string, uuid: string) {
+  console.log('createUserInDB')
+
+  const res = await fetch(`${BACKEND_URL}/add-user`, {
+    method: "POST",
+    headers: {
+      "Accept": "application/json",
+      "Content-Type": "application/json"
+    },
+    body: JSON.stringify({
+      user: {
+        email,
+        uuid,
+        name: ''
+      }
+    }),
+  })
+
+  console.log({ res })
+
+  return await res.json()
+}
+
+export async function registerNewUser(email: string, password: string) {
   try {
     const userCredential = await createUserWithEmailAndPassword(authentication, email, password)
+    const userFromDB = await createUserInDB(email, userCredential.user.uid)
     const user = userCredential.user;
-
-    localStorage.setItem('uid', user.uid)
-
-    return { user };
+    return { user, userFromDB };
 
   } catch(error) {
     const errorCode = error.code;
@@ -41,9 +64,6 @@ export async function signIn(email: string, password: string) {
   try {
     const userCredential = await signInWithEmailAndPassword(authentication, email, password)
     const user = userCredential.user;
-
-    localStorage.setItem('uid', user.uid)
-
     return { user };
 
   } catch(error) {
@@ -52,8 +72,4 @@ export async function signIn(email: string, password: string) {
 
     return {errorCode, errorMessage};
   }
-}
-
-export function signOut() {
-  localStorage.removeItem('uid');
 }
