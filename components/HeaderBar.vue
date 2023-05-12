@@ -8,7 +8,7 @@
       <NuxtLink class='header-link' to='/about'>
         О нас
       </NuxtLink>
-      <NuxtLink v-if='uid' class='header-link'  :to='`user/${uid}`'>
+      <NuxtLink v-if='uid' class='header-link'  :to='`/user/${uid}`'>
         😎
       </NuxtLink>
       <NuxtLink v-else class='header-link' to='/user/sign-in'>
