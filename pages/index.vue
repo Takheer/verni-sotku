@@ -122,9 +122,9 @@ export default Vue.extend({
 
       statsTable.value = statistics;
 
-      headings.value = data.values[0]
-      data.values.splice(0, 1)
-      spendingList.value = data.values.reverse().map(row => ({
+      headings.value = data[0]
+      data.splice(0, 1)
+      spendingList.value = data.reverse().map(row => ({
         who: peopleWho.find(p => p.name === row[0]) || {} as Person,
         whom: peopleWhom.find(p => p.name === row[1]) || {} as Person,
         sum: parseFloat(row[2].replace(",", "")),
